@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+import ru.torgov44.currency.config.CurrencyClientConfig;
 
 @Component
 @RequiredArgsConstructor
@@ -16,12 +17,13 @@ public class CbrCurrencyRateClient implements HttpCurrencyDateRateClient {
 
     public static final String DATE_PATTERN = "dd/MM/yyyy";
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    private final CurrencyClientConfig config;
 
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
     @Override
     public String requestByDate(LocalDate date) {
-        var baseUrl = "http://cbr.ru/scripts/XML_daily.asp";
+        var baseUrl = config.getUrl();
         var client = HttpClient.newHttpClient();
         var url = buildUriRequest(baseUrl, date);
         try {
